@@ -41,3 +41,12 @@
 - El adaptador añade /api a NEXT_PUBLIC_API_URL.
 - Un fallo de API no activa demo automáticamente.
 - Un envío en curso espera su respuesta aunque venza el contador local.
+
+## Despliegue remoto — Paso 11
+
+- El frontend se publica en Netlify desde GitHub.
+- La API se publica en Render desde la rama `main`.
+- MySQL se aloja en Aiven con TLS y validación de certificado.
+- Render autoriza únicamente el origen definitivo de Netlify.
+- Las credenciales y certificados permanecen fuera del repositorio.
+- El plan gratuito de Render puede introducir demora después de inactividad.

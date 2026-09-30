@@ -2,31 +2,30 @@
 
 ## Avance
 
-| Paso | Descripción                                | Estado     |
-| ---- | ------------------------------------------ | ---------- |
-| 0    | Preparación de backend y frontend          | Completado |
-| 1    | MySQL, configuración y persistencia base   | Completado |
-| 2    | Sesiones firmadas y CORS                   | Completado |
-| 3    | Registro validado y correo único           | Completado |
-| 4    | Errores, límites y cierre controlado       | Completado |
-| 5    | Reproducibilidad, contrato y documentación | Completado |
-| 6    | Sistema visual y estructura del frontend   | Siguiente  |
+| Paso | Descripción                                 | Estado                        |
+| ---- | ------------------------------------------- | ----------------------------- |
+| 0    | Preparación de backend y frontend           | Completado                    |
+| 1    | MySQL, configuración y persistencia base    | Completado                    |
+| 2    | Sesiones firmadas y CORS                    | Completado                    |
+| 3    | Registro validado y correo único            | Completado                    |
+| 4    | Errores, límites y cierre controlado        | Completado                    |
+| 5    | Reproducibilidad, contrato y documentación  | Completado                    |
+| 11   | Publicación remota e integración productiva | Validado; pendiente de commit |
 
-## Evidencia del Paso 5
+## Evidencia del Paso 11
 
-- Conexiones de aplicación y pruebas verificadas.
-- Migraciones ejecutadas en ambas bases.
-- Suite completa: 13 archivos y 51 pruebas aprobadas.
-- Lint, TypeScript y compilación aprobados.
-- Contrato de integración con el frontend documentado.
-- Blueprint canónico incorporado al repositorio.
-- Backend compilado ejecutado con `npm start`.
-- Smoke test: registro 201 y duplicado 409.
-- Cierre controlado de HTTP y MySQL confirmado con SIGINT.
+- API publicada en Render.
+- Health check remoto con HTTP 200.
+- MySQL remoto publicado en Aiven con TLS.
+- Migración y tabla `registrations` verificadas.
+- Frontend de Netlify autorizado mediante CORS.
+- Preflight remoto aprobado con HTTP 204.
+- Registro productivo persistido en Aiven.
+- Correo repetido rechazado.
+- Integración Netlify, Render y Aiven validada.
 
 ## Estado actual
 
-El backend local está completo para comenzar la integración del frontend.
+El backend está publicado y conectado de forma segura con MySQL remoto.
 
-La publicación remota, los orígenes definitivos, TLS y la configuración
-de proxy se atenderán en el Paso 11.
+Las credenciales y los certificados permanecen fuera del repositorio.

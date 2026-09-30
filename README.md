@@ -108,3 +108,12 @@ Los enlaces GitHub y la URL pública se añadirán durante despliegue.
 
 `.env.example` contiene ejemplos sin secretos reales.
 `.env` permanece fuera de Git.
+
+## Despliegue
+
+- Frontend: https://app-fuera-de-linea-front.netlify.app
+- API: https://app-fuera-de-linea-back.onrender.com
+- Health check: https://app-fuera-de-linea-back.onrender.com/api/health
+
+La configuración y evidencia del entorno publicado se describen en
+[docs/deployment.md](docs/deployment.md).
