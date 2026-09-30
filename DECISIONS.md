@@ -33,3 +33,11 @@
 - Sin reintentos automáticos de inserción.
 - Cierre mediante SIGINT/SIGTERM con un límite de diez segundos.
 - Configuración del proxy por verificar durante despliegue.
+
+## Integración — Paso 5
+
+- BLUEPRINT.md del backend es la copia canónica del plan en el proyecto.
+- El frontend mantendrá su mapa y enlazará el blueprint canónico.
+- El adaptador añade /api a NEXT_PUBLIC_API_URL.
+- Un fallo de API no activa demo automáticamente.
+- Un envío en curso espera su respuesta aunque venza el contador local.

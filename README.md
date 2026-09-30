@@ -19,9 +19,9 @@ arte y creación digital.
 - npm.
 - MySQL 8.0; entorno validado con 8.0.46.
 
-Versiones: [Entorno](docs/environment.md).
+Versiones instaladas: [Entorno](docs/environment.md).
 
-## Instalación
+## Instalación local
 
 ```bash
 nvm use
@@ -29,10 +29,10 @@ npm ci
 cp .env.example .env
 ```
 
-Preparar bases, usuarios y contraseñas:
+Configurar bases, usuarios y contraseñas:
 [Base de datos](docs/database.md).
 
-Preparar secreto y orígenes:
+Configurar secreto y orígenes:
 [Operación](docs/runtime.md).
 
 ```bash
@@ -55,6 +55,7 @@ API local: http://localhost:3001.
 npm run check
 ```
 
+Incluye formato, lint, tipos, tests y build.
 Requiere MySQL y la base de pruebas configurados.
 
 Con el servidor abierto:
@@ -63,7 +64,10 @@ Con el servidor abierto:
 npm run smoke:registration
 ```
 
-Instrucciones y efectos sobre los datos: [Pruebas](docs/testing.md).
+Obtiene una sesión, confirma un registro y comprueba el duplicado.
+Deja un registro de prueba en la base de la API.
+
+Pruebas específicas y evidencias: [Pruebas](docs/testing.md).
 
 ## Producción local
 
@@ -77,12 +81,13 @@ Conservar las variables de entorno y el secreto de sesiones.
 ## Documentación
 
 - [Proyecto](PROJECT.md)
-- [Blueprint](BLUEPRINT.md)
+- [Blueprint canónico](BLUEPRINT.md)
 - [Estado](STATUS.md)
 - [Decisiones](DECISIONS.md)
 - [Arquitectura](docs/architecture.md)
 - [Base de datos](docs/database.md)
 - [Contrato API](docs/api.md)
+- [Integración frontend](docs/frontend-integration.md)
 - [Operación y límites](docs/runtime.md)
 - [Pruebas](docs/testing.md)
 
@@ -93,6 +98,11 @@ analizar errores y mejorar la documentación. Reviso las propuestas y ejecuto
 las validaciones antes de cerrar cada etapa.
 
 Más información: [Colaboración con IA](docs/ai-collaboration.md).
+
+## Frontend y publicación
+
+El frontend se desarrolla en app-fuera-de-linea-front.
+Los enlaces GitHub y la URL pública se añadirán durante despliegue.
 
 ## Credenciales
 
