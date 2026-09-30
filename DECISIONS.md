@@ -17,3 +17,7 @@
 - Esquema inicial versionado en SQL, sin introducir un ORM.
 - Unicidad del correo protegida por MySQL.
 - Los tests eliminan únicamente sus registros temporales.
+- Sesiones firmadas con HMAC-SHA256 mediante crypto de Node.
+- Secreto estable, fuera de Git y sin datos personales en el token.
+- Reloj sustituible para comprobar vencimientos sin esperas reales.
+- CORS con orígenes exactos; no sustituye autenticación.

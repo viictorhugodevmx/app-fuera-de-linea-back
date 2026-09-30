@@ -5,8 +5,8 @@ arte y creación digital.
 
 ## Estado
 
-Preparación y persistencia MySQL verificadas.
-El endpoint de registro y las sesiones se implementarán en los próximos pasos.
+Persistencia MySQL y sesiones firmadas de cinco minutos implementadas.
+El endpoint de registro se implementará en el Paso 3.
 
 ## Requisitos
 
@@ -14,7 +14,7 @@ El endpoint de registro y las sesiones se implementarán en los próximos pasos.
 - npm.
 - MySQL 8.0; entorno local validado con 8.0.46.
 
-Las dependencias instaladas se registran en [Entorno](docs/environment.md).
+Versiones instaladas: [Entorno](docs/environment.md).
 
 ## Instalación
 
@@ -24,8 +24,10 @@ npm ci
 cp .env.example .env
 ```
 
-Configurar bases, usuarios y contraseñas siguiendo
-[Base de datos](docs/database.md).
+1. Crear bases y usuarios y configurar contraseñas:
+   [Base de datos](docs/database.md).
+2. Preparar SESSION_SECRET y ALLOWED_ORIGINS:
+   [Contrato API](docs/api.md).
 
 Después:
 
@@ -41,7 +43,7 @@ npm run db:migrate:test
 npm run dev
 ```
 
-API disponible por defecto en http://localhost:3001.
+API local: http://localhost:3001.
 
 ## Validación
 
@@ -49,10 +51,10 @@ API disponible por defecto en http://localhost:3001.
 npm run check
 ```
 
-Incluye formato, lint, tipos, tests unitarios, integración MySQL y build.
-Requiere la base de pruebas configurada y MySQL disponible.
+Incluye formato, lint, tipos, tests y build.
+Requiere MySQL y la base de pruebas configurados.
 
-Consulta [Pruebas](docs/testing.md) para ejecuciones específicas y curl.
+Comandos específicos y curl: [Pruebas](docs/testing.md).
 
 ## Producción local
 
@@ -60,6 +62,8 @@ Consulta [Pruebas](docs/testing.md) para ejecuciones específicas y curl.
 npm run build
 npm start
 ```
+
+Conservar las variables de entorno, incluido el secreto de sesiones.
 
 ## Documentación
 
@@ -69,6 +73,7 @@ npm start
 - [Decisiones](DECISIONS.md)
 - [Arquitectura](docs/architecture.md)
 - [Base de datos](docs/database.md)
+- [Contrato API](docs/api.md)
 - [Pruebas](docs/testing.md)
 
 ## Colaboración con IA
@@ -77,9 +82,9 @@ Utilizo IA como apoyo para organizar tareas, preparar propuestas de código,
 analizar errores y mejorar la documentación. Reviso las propuestas y ejecuto
 las validaciones antes de cerrar cada etapa.
 
-Más información en [Colaboración con IA](docs/ai-collaboration.md).
+Más información: [Colaboración con IA](docs/ai-collaboration.md).
 
-## Variables y credenciales
+## Credenciales
 
-`.env.example` documenta las variables necesarias sin credenciales reales.
-El archivo `.env` permanece fuera de Git.
+`.env.example` documenta las variables sin credenciales reales.
+`.env` permanece fuera de Git. No compartir contraseñas ni SESSION_SECRET.

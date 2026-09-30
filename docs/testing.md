@@ -7,9 +7,8 @@ nvm use
 npm ci
 ```
 
-Configurar `.env`, bases y usuarios siguiendo [Base de datos](database.md).
-
-Antes de la primera ejecución:
+Configurar `.env`, bases y usuarios según [Base de datos](database.md).
+Preparar el secreto y los orígenes según [Contrato API](api.md).
 
 ```bash
 npm run db:check
@@ -23,42 +22,56 @@ npm run db:migrate:test
 npm run check
 ```
 
-Incluye formato, lint, tipos, tests y build.
-Los tests de integración requieren MySQL disponible y la base de pruebas
-configurada. No se omiten silenciosamente si falta conexión.
+Incluye formato, lint, tipos, todos los tests y build.
+MySQL y la base de pruebas deben estar disponibles.
+Las pruebas de integración no se omiten silenciosamente.
 
 ## Ejecuciones específicas
 
 ```bash
 npm run test:unit
+npm run test:http
 npm run test:integration
-npm run db:check
 ```
+
+`test:unit` también incluye la prueba inicial de health.
+`test:http` incluye health y los endpoints de sesiones.
 
 ## Cobertura actual
 
-- Disponibilidad HTTP del servicio.
-- Configuración de pruebas y variables obligatorias.
-- Validación del puerto.
-- Protección del nombre de la base de pruebas.
-- Inserción y recuperación de registros en MySQL.
-- Rechazo de correo duplicado, incluyendo diferencias de mayúsculas.
+- Configuración MySQL y separación de pruebas.
+- Persistencia y correo único.
+- Configuración de secretos y orígenes.
+- Emisión de sesiones y duración de cinco minutos.
+- Límite exacto de vencimiento.
+- Tokens alterados, malformados o firmados con otro secreto.
+- Respuestas HTTP, ausencia de caché, CORS y JSON inválido.
 
-## HTTP manual
+El reloj de los tests de sesiones es controlado.
+No es necesario esperar cinco minutos reales.
+
+## Comprobaciones manuales
 
 Con `npm run dev` abierto en otra terminal:
 
 ```bash
 curl -i http://localhost:3001/api/health
+
+curl -i -X POST http://localhost:3001/api/registration-sessions
+
+curl -i -X OPTIONS \
+  http://localhost:3001/api/registration-sessions \
+  -H 'Origin: http://localhost:3000' \
+  -H 'Access-Control-Request-Method: POST' \
+  -H 'Access-Control-Request-Headers: Content-Type'
+
+curl -i http://localhost:3001/api/health \
+  -H 'Origin: https://otro-sitio.example'
 ```
 
-Resultado esperado: HTTP 200 con `status: "ok"`
-y `service: "fuera-de-linea-api"`.
+Resultados esperados, en orden: 200, 201, 204 y 403.
 
-El endpoint health comprueba Express. La conexión MySQL se verifica
-por separado mediante `npm run db:check`.
+## Evidencia del Paso 2
 
-## Evidencia del Paso 1
-
-Víctor ejecutó satisfactoriamente ambas migraciones y conexiones.
-La validación completa aprobó 7 tests, lint, tipos, formato y build.
+Víctor comprobó manualmente emisión 201, preflight 204 y rechazo 403.
+La validación completa aprobó 28 tests, formato, lint, tipos y build.

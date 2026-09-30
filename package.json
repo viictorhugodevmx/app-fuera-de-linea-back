@@ -18,18 +18,21 @@
     "db:migrate": "tsx src/db/migrate.ts",
     "db:migrate:test": "tsx src/db/migrate.ts --test",
     "test:unit": "vitest run tests/unit tests/health.test.ts",
-    "test:integration": "vitest run tests/integration"
+    "test:integration": "vitest run tests/integration",
+    "test:http": "vitest run tests/http tests/health.test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
     "mysql2": "^3.24.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.3",
     "@types/supertest": "^7.2.1",
