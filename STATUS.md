@@ -2,15 +2,15 @@
 
 ## Avance
 
-| Paso | Descripción                                 | Estado                        |
-| ---- | ------------------------------------------- | ----------------------------- |
-| 0    | Preparación de backend y frontend           | Completado                    |
-| 1    | MySQL, configuración y persistencia base    | Completado                    |
-| 2    | Sesiones firmadas y CORS                    | Completado                    |
-| 3    | Registro validado y correo único            | Completado                    |
-| 4    | Errores, límites y cierre controlado        | Completado                    |
-| 5    | Reproducibilidad, contrato y documentación  | Completado                    |
-| 11   | Publicación remota e integración productiva | Validado; pendiente de commit |
+| Paso | Descripción                                 | Estado     |
+| ---- | ------------------------------------------- | ---------- |
+| 0    | Preparación de backend y frontend           | Completado |
+| 1    | MySQL, configuración y persistencia base    | Completado |
+| 2    | Sesiones firmadas y CORS                    | Completado |
+| 3    | Registro validado y correo único            | Completado |
+| 4    | Errores, límites y cierre controlado        | Completado |
+| 5    | Reproducibilidad, contrato y documentación  | Completado |
+| 11   | Publicación remota e integración productiva | Completado |
 
 ## Evidencia del Paso 11
 
