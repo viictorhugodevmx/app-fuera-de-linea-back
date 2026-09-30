@@ -1,8 +1,17 @@
-# Arquitectura inicial
+# Arquitectura actual
 
-`src/app.ts` define Express sin abrir un puerto.
-`src/server.ts` carga el entorno y arranca el servidor.
-Los tests HTTP usan la aplicación directamente mediante Supertest.
+- `src/app.ts`: aplicación Express sin abrir un puerto.
+- `src/server.ts`: carga del entorno y arranque HTTP.
+- `src/config/database.ts`: configuración independiente de aplicación y pruebas.
+- `src/db/pool.ts`: creación de pools MySQL con consultas múltiples desactivadas.
+- `src/db/check.ts`: comprobación de conexión, base y usuario.
+- `src/db/migrate.ts`: aplicación de la migración inicial.
+- `db/migrations/`: esquema SQL versionado.
+- `tests/unit/`: validaciones de configuración.
+- `tests/integration/`: pruebas contra MySQL real.
 
-La conexión MySQL, las capas de registro y las sesiones se incorporarán
-en sus pasos correspondientes.
+Supertest prueba HTTP sin requerir un servidor abierto manualmente.
+Las consultas de datos usan parámetros.
+
+El servicio de registro y las sesiones de cinco minutos se implementarán
+en los pasos siguientes.

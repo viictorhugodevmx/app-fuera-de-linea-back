@@ -3,10 +3,13 @@
 - APP: Fuera de Línea.
 - Estándar: APP v0.1.
 - Blueprint: v0.1.
-- Paso actual: 0 — Preparación.
-- Estado: validado por Víctor; pendientes commits y confirmación de cierre.
-- Backend: formato, lint, tipos, test y build aprobados.
-- HTTP: health responde 200 en desarrollo y producción local.
-- MySQL: 8.0.46; acceso administrativo mediante sudo y auth_socket.
-- Frontend: checks y arranques aprobados.
-- Siguiente paso: 1 — MySQL y conexión.
+- Último paso cerrado: 0 — Preparación.
+- Paso actual: 1 — MySQL y conexión.
+- Estado: validado por Víctor; pendiente commit y confirmación de cierre.
+- Bases: fuera_de_linea y fuera_de_linea_test.
+- Usuarios: fdl_app y fdl_test, restringidos a sus respectivas bases.
+- Conexiones y migraciones: comprobadas en ambas bases.
+- Tests: 7 aprobados.
+- Controles: formato, lint, tipos y build aprobados.
+- Incidencia resuelta: contraseñas ajustadas a política MEDIUM.
+- Siguiente paso: 2 — Contrato API y sesiones de registro.
