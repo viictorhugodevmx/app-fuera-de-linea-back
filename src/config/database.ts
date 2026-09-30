@@ -2,6 +2,46 @@ import 'dotenv/config';
 
 export type DatabaseTarget = 'app' | 'test';
 
+type DatabaseSsl = {
+  ca: string;
+  rejectUnauthorized: true;
+};
+
+function getSslConfig(prefix: string): DatabaseSsl | undefined {
+  const mode =
+    process.env[`${prefix}SSL_MODE`]?.trim().toLowerCase() || 'disabled';
+
+  if (mode === 'disabled') {
+    return undefined;
+  }
+
+  if (mode !== 'required') {
+    throw new Error(`${prefix}SSL_MODE debe ser disabled o required.`);
+  }
+
+  const encodedCa = process.env[`${prefix}SSL_CA_BASE64`]?.trim();
+
+  if (!encodedCa) {
+    throw new Error(`Falta la variable ${prefix}SSL_CA_BASE64.`);
+  }
+
+  const ca = Buffer.from(encodedCa, 'base64').toString('utf8');
+
+  if (
+    !ca.includes('-----BEGIN CERTIFICATE-----') ||
+    !ca.includes('-----END CERTIFICATE-----')
+  ) {
+    throw new Error(
+      `${prefix}SSL_CA_BASE64 no contiene un certificado válido.`,
+    );
+  }
+
+  return {
+    ca,
+    rejectUnauthorized: true,
+  };
+}
+
 export function getDatabaseConfig(target: DatabaseTarget) {
   const prefix = target === 'test' ? 'TEST_DB_' : 'DB_';
 
@@ -28,11 +68,15 @@ export function getDatabaseConfig(target: DatabaseTarget) {
     throw new Error('La base de pruebas debe terminar en _test.');
   }
 
-  return {
+  const config = {
     host: required('HOST'),
     port,
     database,
     user: required('USER'),
     password: required('PASSWORD'),
   };
+
+  const ssl = getSslConfig(prefix);
+
+  return ssl ? { ...config, ssl } : config;
 }
