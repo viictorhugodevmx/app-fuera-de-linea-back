@@ -1,26 +1,18 @@
 import cors from 'cors';
-import express, {
-  type NextFunction,
-  type Request,
-  type Response,
-} from 'express';
+import express from 'express';
 import { getAllowedOrigins } from './config/cors.js';
 import type { DatabaseTarget } from './config/database.js';
 import { getSessionConfig } from './config/session.js';
 import { createDatabasePool } from './db/pool.js';
-import {
-  createRegistrationService,
-  EmailAlreadyRegisteredError,
-} from './services/registration.js';
-import {
-  createSessionService,
-  SessionError,
-} from './services/registration-session.js';
-import { RegistrationInputError } from './validators/registration.js';
+import { apiErrorHandler } from './middleware/api-error.js';
+import { createRegistrationLimiter } from './middleware/registration-limit.js';
+import { createRegistrationService } from './services/registration.js';
+import { createSessionService } from './services/registration-session.js';
 
 export function createApp(
   databaseTarget: DatabaseTarget = 'app',
   now: () => number = Date.now,
+  requestLimit = 30,
 ) {
   const app = express();
   const allowedOrigins = getAllowedOrigins();
@@ -60,6 +52,11 @@ export function createApp(
     }),
   );
 
+  app.use(
+    ['/api/registration-sessions', '/api/registrations'],
+    createRegistrationLimiter(requestLimit),
+  );
+
   app.use(express.json({ limit: '16kb' }));
 
   app.get('/api/health', (_request, response) => {
@@ -90,71 +87,7 @@ export function createApp(
     });
   });
 
-  app.use(
-    (
-      error: unknown,
-      _request: Request,
-      response: Response,
-      next: NextFunction,
-    ) => {
-      if (response.headersSent) {
-        next(error);
-        return;
-      }
-
-      if (error instanceof RegistrationInputError) {
-        response.status(400).json({
-          error: {
-            code: 'INVALID_INPUT',
-            message: error.message,
-            fields: error.fields,
-          },
-        });
-        return;
-      }
-
-      if (error instanceof SessionError) {
-        response.status(error.code === 'SESSION_EXPIRED' ? 410 : 400).json({
-          error: {
-            code: error.code,
-            message: error.message,
-          },
-        });
-        return;
-      }
-
-      if (error instanceof EmailAlreadyRegisteredError) {
-        response.status(409).json({
-          error: {
-            code: 'EMAIL_ALREADY_REGISTERED',
-            message: error.message,
-          },
-        });
-        return;
-      }
-
-      if (
-        error instanceof SyntaxError &&
-        'status' in error &&
-        error.status === 400
-      ) {
-        response.status(400).json({
-          error: {
-            code: 'INVALID_INPUT',
-            message: 'El cuerpo de la solicitud debe contener JSON válido.',
-          },
-        });
-        return;
-      }
-
-      response.status(500).json({
-        error: {
-          code: 'INTERNAL_ERROR',
-          message: 'No fue posible completar la solicitud.',
-        },
-      });
-    },
-  );
+  app.use(apiErrorHandler);
 
   return {
     app,

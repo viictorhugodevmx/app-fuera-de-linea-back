@@ -1,21 +1,23 @@
 # Fuera de Línea — Backend
 
-API para un evento ficticio de cultura urbana, música, arte
-y creación digital.
+API para un evento ficticio de cultura urbana, música,
+arte y creación digital.
 
-## Funcionalidad actual
+## Funcionalidad
 
-- Sesiones firmadas con una ventana de registro de cinco minutos.
-- Validación de nombre, correo y mensaje.
+- Sesiones firmadas de cinco minutos.
+- Validación y normalización del formulario.
 - Registro persistido en MySQL.
-- Un registro por correo, protegido también ante envíos simultáneos.
-- Respuestas de error y CORS configurables.
+- Correo único, protegido ante envíos simultáneos.
+- CORS y límite de solicitudes.
+- Errores JSON y logs sin datos personales.
+- Cierre ordenado de HTTP y MySQL.
 
 ## Requisitos
 
 - Node.js 22.19.0.
 - npm.
-- MySQL 8.0; entorno local validado con 8.0.46.
+- MySQL 8.0; entorno validado con 8.0.46.
 
 Versiones: [Entorno](docs/environment.md).
 
@@ -27,10 +29,11 @@ npm ci
 cp .env.example .env
 ```
 
-Preparar bases, usuarios y contraseñas según
+Preparar bases, usuarios y contraseñas:
 [Base de datos](docs/database.md).
-Configurar el secreto de sesiones y los orígenes según
-[Contrato API](docs/api.md).
+
+Preparar secreto y orígenes:
+[Operación](docs/runtime.md).
 
 ```bash
 npm run db:check
@@ -52,10 +55,9 @@ API local: http://localhost:3001.
 npm run check
 ```
 
-Incluye formato, lint, tipos, tests y build.
 Requiere MySQL y la base de pruebas configurados.
 
-Con el servidor abierto, comprobar registro y duplicado mediante curl:
+Con el servidor abierto:
 
 ```bash
 npm run smoke:registration
@@ -81,6 +83,7 @@ Conservar las variables de entorno y el secreto de sesiones.
 - [Arquitectura](docs/architecture.md)
 - [Base de datos](docs/database.md)
 - [Contrato API](docs/api.md)
+- [Operación y límites](docs/runtime.md)
 - [Pruebas](docs/testing.md)
 
 ## Colaboración con IA
@@ -93,10 +96,5 @@ Más información: [Colaboración con IA](docs/ai-collaboration.md).
 
 ## Credenciales
 
-`.env.example` documenta las variables sin credenciales reales.
+`.env.example` contiene ejemplos sin secretos reales.
 `.env` permanece fuera de Git.
-
-## Pendiente
-
-Límites de solicitudes, tratamiento de indisponibilidad de MySQL
-y cierre ordenado del proceso se completarán en el Paso 4.

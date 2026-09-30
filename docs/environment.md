@@ -16,6 +16,7 @@ app-fuera-de-linea-back@0.1.0 /home/victor/new_projects/app-fuera-de-linea/app-f
 ├── cors@2.8.6
 ├── dotenv@18.0.4
 ├── eslint@10.11.0
+├── express-rate-limit@8.7.0
 ├── express@5.2.1
 ├── mysql2@3.24.5
 ├── prettier@3.9.9
