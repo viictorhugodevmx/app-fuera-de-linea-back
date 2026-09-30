@@ -1,12 +1,15 @@
 # Fuera de Línea — Backend
 
-API para el registro de un evento ficticio de cultura urbana, música,
-arte y creación digital.
+API para un evento ficticio de cultura urbana, música, arte
+y creación digital.
 
-## Estado
+## Funcionalidad actual
 
-Persistencia MySQL y sesiones firmadas de cinco minutos implementadas.
-El endpoint de registro se implementará en el Paso 3.
+- Sesiones firmadas con una ventana de registro de cinco minutos.
+- Validación de nombre, correo y mensaje.
+- Registro persistido en MySQL.
+- Un registro por correo, protegido también ante envíos simultáneos.
+- Respuestas de error y CORS configurables.
 
 ## Requisitos
 
@@ -14,7 +17,7 @@ El endpoint de registro se implementará en el Paso 3.
 - npm.
 - MySQL 8.0; entorno local validado con 8.0.46.
 
-Versiones instaladas: [Entorno](docs/environment.md).
+Versiones: [Entorno](docs/environment.md).
 
 ## Instalación
 
@@ -24,12 +27,10 @@ npm ci
 cp .env.example .env
 ```
 
-1. Crear bases y usuarios y configurar contraseñas:
-   [Base de datos](docs/database.md).
-2. Preparar SESSION_SECRET y ALLOWED_ORIGINS:
-   [Contrato API](docs/api.md).
-
-Después:
+Preparar bases, usuarios y contraseñas según
+[Base de datos](docs/database.md).
+Configurar el secreto de sesiones y los orígenes según
+[Contrato API](docs/api.md).
 
 ```bash
 npm run db:check
@@ -54,7 +55,13 @@ npm run check
 Incluye formato, lint, tipos, tests y build.
 Requiere MySQL y la base de pruebas configurados.
 
-Comandos específicos y curl: [Pruebas](docs/testing.md).
+Con el servidor abierto, comprobar registro y duplicado mediante curl:
+
+```bash
+npm run smoke:registration
+```
+
+Instrucciones y efectos sobre los datos: [Pruebas](docs/testing.md).
 
 ## Producción local
 
@@ -63,7 +70,7 @@ npm run build
 npm start
 ```
 
-Conservar las variables de entorno, incluido el secreto de sesiones.
+Conservar las variables de entorno y el secreto de sesiones.
 
 ## Documentación
 
@@ -87,4 +94,9 @@ Más información: [Colaboración con IA](docs/ai-collaboration.md).
 ## Credenciales
 
 `.env.example` documenta las variables sin credenciales reales.
-`.env` permanece fuera de Git. No compartir contraseñas ni SESSION_SECRET.
+`.env` permanece fuera de Git.
+
+## Pendiente
+
+Límites de solicitudes, tratamiento de indisponibilidad de MySQL
+y cierre ordenado del proceso se completarán en el Paso 4.

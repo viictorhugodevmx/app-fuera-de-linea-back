@@ -2,19 +2,15 @@
 
 Base local: http://localhost:3001/api
 
-## Estado
+Los endpoints health, sesiones y registros están implementados.
 
-- GET /health: implementado.
-- POST /registration-sessions: implementado.
-- POST /registrations: previsto en el Paso 3.
+## Configuración
 
-## Configuración de sesiones
+`SESSION_SECRET` debe contener un secreto propio de al menos 32 caracteres.
+Mantenerlo estable: cambiarlo invalida las sesiones anteriores.
 
-`SESSION_SECRET` debe ser un secreto propio de al menos 32 caracteres.
-No usar el placeholder de `.env.example`.
-
-Este comando genera el secreto cuando falta o conserva el placeholder,
-sin imprimirlo ni modificar las credenciales MySQL:
+Después de preparar `.env`, este comando genera el secreto si falta
+o todavía contiene el placeholder:
 
 ```bash
 node --input-type=module <<'NODE'
@@ -38,12 +34,9 @@ writeFileSync('.env', `${content}\n`);
 NODE
 ```
 
-Cambiar el secreto invalida las sesiones emitidas con el anterior.
-Debe mantenerse estable entre arranques y despliegues.
-
 ## GET /health
 
-Respuesta 200:
+HTTP 200:
 
 ```json
 {
@@ -52,13 +45,13 @@ Respuesta 200:
 }
 ```
 
-Comprueba disponibilidad HTTP; no confirma la conexión MySQL.
+Comprueba HTTP. MySQL se comprueba con `npm run db:check`.
 
 ## POST /registration-sessions
 
-No requiere datos personales ni body.
+No requiere body ni datos personales.
 
-Respuesta 201 con `Cache-Control: no-store`:
+HTTP 201, con `Cache-Control: no-store`:
 
 ```json
 {
@@ -70,22 +63,16 @@ Respuesta 201 con `Cache-Control: no-store`:
 }
 ```
 
-La sesión dura 300 segundos desde su emisión.
-El frontend conservará token y vencimiento al recargar.
+Duración: 300 segundos. El frontend conservará token y vencimiento al recargar.
 
-El token incluye identificador, versión y fechas. Se firma con HMAC-SHA256.
-Está firmado, no cifrado; no contiene datos personales.
+El token contiene identificador, versión y fechas. Se firma con HMAC-SHA256;
+no está cifrado ni contiene datos personales.
 
-El servicio rechaza tokens alterados, malformados o vencidos.
-Al alcanzar exactamente el vencimiento, la sesión deja de ser válida.
-
-La firma permite detectar alteraciones; no identifica de forma inviolable
-al visitante ni impide que solicite una nueva sesión.
-La restricción de correo único protege el registro del evento.
+Una sesión vence exactamente al alcanzar expiresAt.
+La firma detecta alteraciones, pero no identifica de forma inviolable
+al visitante ni impide solicitar nuevas sesiones.
 
 ## POST /registrations
-
-Contrato previsto; se implementará en el Paso 3.
 
 Body:
 
@@ -98,7 +85,17 @@ Body:
 }
 ```
 
-Respuesta prevista 201:
+Validaciones:
+
+- Nombre: 2–100 caracteres tras recortar espacios.
+- Correo: formato básico válido, máximo 254 caracteres.
+- Mensaje: obligatorio, 1–1000 caracteres tras recortar espacios.
+- Sesión: firma válida y plazo vigente al recibir la solicitud.
+
+El correo se recorta y convierte a minúsculas.
+No se comprueba que exista ni se envía un correo de confirmación.
+
+HTTP 201, con `Cache-Control: no-store`:
 
 ```json
 {
@@ -108,8 +105,12 @@ Respuesta prevista 201:
 }
 ```
 
-El servidor comprobará el plazo al recibir la solicitud.
-Una respuesta tardía no revocará un envío aceptado dentro del plazo.
+El registro se guarda mediante consulta parametrizada.
+MySQL impide duplicados, incluso con solicitudes simultáneas.
+El primer registro se conserva; un duplicado no lo modifica.
+
+El plazo se comprueba con la hora capturada al entrar en Express.
+Una espera posterior de MySQL no revoca un envío recibido a tiempo.
 
 ## Errores
 
@@ -119,21 +120,26 @@ Formato:
 {
   "error": {
     "code": "INVALID_INPUT",
-    "message": "Descripción comprensible del error."
+    "message": "Revisa los datos del formulario.",
+    "fields": {
+      "email": "Escribe un correo válido de hasta 254 caracteres."
+    }
   }
 }
 ```
 
-| HTTP | Código                   | Estado                                             |
-| ---- | ------------------------ | -------------------------------------------------- |
-| 400  | INVALID_INPUT            | JSON malformado implementado; campos en Paso 3     |
-| 400  | INVALID_SESSION          | Verificador implementado; respuesta HTTP en Paso 3 |
-| 403  | ORIGIN_NOT_ALLOWED       | Implementado                                       |
-| 409  | EMAIL_ALREADY_REGISTERED | Previsto en Paso 3                                 |
-| 410  | SESSION_EXPIRED          | Verificador implementado; respuesta HTTP en Paso 3 |
-| 429  | TOO_MANY_REQUESTS        | Previsto en Paso 4                                 |
-| 503  | SERVICE_UNAVAILABLE      | Previsto en Paso 4                                 |
-| 500  | INTERNAL_ERROR           | Respuesta genérica implementada                    |
+`fields` aparece en errores de validación del formulario.
+
+| HTTP | Código                   | Estado                          |
+| ---- | ------------------------ | ------------------------------- |
+| 400  | INVALID_INPUT            | Implementado                    |
+| 400  | INVALID_SESSION          | Implementado                    |
+| 403  | ORIGIN_NOT_ALLOWED       | Implementado                    |
+| 409  | EMAIL_ALREADY_REGISTERED | Implementado                    |
+| 410  | SESSION_EXPIRED          | Implementado                    |
+| 429  | TOO_MANY_REQUESTS        | Previsto en Paso 4              |
+| 503  | SERVICE_UNAVAILABLE      | Previsto en Paso 4              |
+| 500  | INTERNAL_ERROR           | Respuesta genérica implementada |
 
 No se devuelven secretos ni detalles internos.
 
@@ -142,9 +148,8 @@ No se devuelven secretos ni detalles internos.
 `ALLOWED_ORIGINS` contiene orígenes exactos separados por comas.
 No acepta comodines ni URLs con rutas.
 
-El origen local del frontend es http://localhost:3000.
-Las solicitudes con un Origin no permitido reciben 403.
-El preflight permitido responde 204.
+Origen local del frontend: http://localhost:3000.
+Preflight permitido: 204. Origin no permitido: 403.
 
-Las solicitudes sin Origin, como curl, siguen funcionando.
+Solicitudes sin Origin, como curl, funcionan.
 CORS controla acceso desde navegadores; no sustituye autenticación.

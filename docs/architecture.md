@@ -1,22 +1,25 @@
 # Arquitectura actual
 
-- `src/app.ts`: Express, CORS, endpoints y respuestas de error.
-- `src/server.ts`: carga de entorno y arranque HTTP.
-- `src/config/database.ts`: configuración MySQL de aplicación y pruebas.
-- `src/config/session.ts`: validación del secreto y duración de sesiones.
-- `src/config/cors.ts`: validación de orígenes exactos.
+- `src/app.ts`: fábrica Express, CORS, rutas y manejo de errores.
+- `src/server.ts`: arranque HTTP.
+- `src/config/`: configuración MySQL, secretos y orígenes.
+- `src/validators/registration.ts`: validación y normalización del formulario.
 - `src/services/registration-session.ts`: emisión y verificación HMAC-SHA256.
-- `src/db/pool.ts`: pools MySQL con consultas múltiples desactivadas.
-- `src/db/check.ts`: comprobación de ambas conexiones.
-- `src/db/migrate.ts`: aplicación del esquema inicial.
+- `src/services/registration.ts`: comprobación de sesión y registro.
+- `src/db/`: pools, comprobación de conexión y migración.
 - `db/migrations/`: esquema SQL versionado.
-- `tests/unit/`: configuración y reglas de sesiones.
-- `tests/http/`: comportamiento HTTP y CORS.
-- `tests/integration/`: persistencia MySQL real.
+- `tests/unit/`: configuración y reglas.
+- `tests/http/`: respuestas HTTP y CORS.
+- `tests/integration/`: recorrido HTTP con MySQL real.
+- `scripts/smoke-registration.sh`: comprobación manual mediante curl.
 
-Supertest utiliza Express sin abrir un puerto manualmente.
-El servicio de sesiones recibe un reloj sustituible para pruebas deterministas.
-Las consultas de datos usan parámetros.
+`createApp` permite seleccionar la base y sustituir el reloj en tests.
+La instancia normal usa la base de aplicación.
+La fábrica expone el cierre de su pool para liberar conexiones.
 
-La configuración se valida al iniciar la aplicación.
-El servicio de registro se implementará en el Paso 3.
+Express captura la hora de recepción antes de procesar el formulario.
+El servicio comprueba la sesión con esa hora y ejecuta una inserción
+parametrizada.
+
+La restricción UNIQUE de MySQL protege la unicidad del correo.
+Sus errores de duplicado se traducen a HTTP 409.

@@ -7,8 +7,8 @@ nvm use
 npm ci
 ```
 
-Configurar `.env`, bases y usuarios según [Base de datos](database.md).
-Preparar el secreto y los orígenes según [Contrato API](api.md).
+Configurar `.env` según [Base de datos](database.md)
+y [Contrato API](api.md).
 
 ```bash
 npm run db:check
@@ -23,7 +23,7 @@ npm run check
 ```
 
 Incluye formato, lint, tipos, todos los tests y build.
-MySQL y la base de pruebas deben estar disponibles.
+Requiere MySQL y la base de pruebas configurados.
 Las pruebas de integración no se omiten silenciosamente.
 
 ## Ejecuciones específicas
@@ -34,44 +34,44 @@ npm run test:http
 npm run test:integration
 ```
 
-`test:unit` también incluye la prueba inicial de health.
-`test:http` incluye health y los endpoints de sesiones.
+Los comandos unit y http incluyen la prueba inicial de health.
+La suite completa ejecuta cada archivo una sola vez.
 
-## Cobertura actual
+## Cobertura
 
-- Configuración MySQL y separación de pruebas.
-- Persistencia y correo único.
-- Configuración de secretos y orígenes.
-- Emisión de sesiones y duración de cinco minutos.
-- Límite exacto de vencimiento.
-- Tokens alterados, malformados o firmados con otro secreto.
-- Respuestas HTTP, ausencia de caché, CORS y JSON inválido.
+- Configuración MySQL, secretos y orígenes.
+- Firma, formato y vencimiento de sesiones.
+- Respuestas HTTP, CORS y JSON inválido.
+- Validación y normalización del formulario.
+- Registro HTTP con persistencia real.
+- Duplicados secuenciales y simultáneos.
+- Rechazo sin inserción para datos o sesiones inválidos.
+- Aceptación antes del vencimiento y rechazo en el límite exacto.
 
-El reloj de los tests de sesiones es controlado.
-No es necesario esperar cinco minutos reales.
+Los tests usan un reloj controlado y una base separada.
+Eliminan únicamente sus registros temporales.
 
-## Comprobaciones manuales
+## Comprobación manual con curl
 
 Con `npm run dev` abierto en otra terminal:
 
 ```bash
-curl -i http://localhost:3001/api/health
-
-curl -i -X POST http://localhost:3001/api/registration-sessions
-
-curl -i -X OPTIONS \
-  http://localhost:3001/api/registration-sessions \
-  -H 'Origin: http://localhost:3000' \
-  -H 'Access-Control-Request-Method: POST' \
-  -H 'Access-Control-Request-Headers: Content-Type'
-
-curl -i http://localhost:3001/api/health \
-  -H 'Origin: https://otro-sitio.example'
+npm run smoke:registration
 ```
 
-Resultados esperados, en orden: 200, 201, 204 y 403.
+El script obtiene una sesión, registra un correo único y repite el envío.
+Resultados esperados: 201 y 409 con EMAIL_ALREADY_REGISTERED.
 
-## Evidencia del Paso 2
+Deja un registro de prueba en la base de la API.
+Elimina sus archivos temporales al terminar.
 
-Víctor comprobó manualmente emisión 201, preflight 204 y rechazo 403.
-La validación completa aprobó 28 tests, formato, lint, tipos y build.
+Para apuntar a otra API:
+
+```bash
+API_URL=https://api.example.com npm run smoke:registration
+```
+
+## Evidencia del Paso 3
+
+Víctor aprobó 42 tests, formato, lint, tipos y build.
+La comprobación manual confirmó registro 201 y duplicado 409.

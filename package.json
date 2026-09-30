@@ -19,7 +19,8 @@
     "db:migrate:test": "tsx src/db/migrate.ts --test",
     "test:unit": "vitest run tests/unit tests/health.test.ts",
     "test:integration": "vitest run tests/integration",
-    "test:http": "vitest run tests/http tests/health.test.ts"
+    "test:http": "vitest run tests/http tests/health.test.ts",
+    "smoke:registration": "bash scripts/smoke-registration.sh"
   },
   "keywords": [],
   "author": "",
