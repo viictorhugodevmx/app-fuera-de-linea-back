@@ -90,6 +90,7 @@ Conservar las variables de entorno y el secreto de sesiones.
 - [Integración frontend](docs/frontend-integration.md)
 - [Operación y límites](docs/runtime.md)
 - [Pruebas](docs/testing.md)
+- [Auditoría final](docs/final-audit.md)
 
 ## Colaboración con IA
 
@@ -101,8 +102,11 @@ Más información: [Colaboración con IA](docs/ai-collaboration.md).
 
 ## Frontend y publicación
 
-El frontend se desarrolla en app-fuera-de-linea-front.
-Los enlaces GitHub y la URL pública se añadirán durante despliegue.
+El frontend está publicado y se mantiene en un repositorio independiente.
+
+- Repositorio frontend: https://github.com/viictorhugodevmx/app-fuera-de-linea-front
+- Repositorio backend: https://github.com/viictorhugodevmx/app-fuera-de-linea-back
+- Aplicación publicada: https://app-fuera-de-linea-front.netlify.app
 
 ## Credenciales
 

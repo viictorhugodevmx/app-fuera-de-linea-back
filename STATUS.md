@@ -11,6 +11,7 @@
 | 4    | Errores, límites y cierre controlado        | Completado |
 | 5    | Reproducibilidad, contrato y documentación  | Completado |
 | 11   | Publicación remota e integración productiva | Completado |
+| 12   | Auditoría, documentación y cierre final     | Completado |
 
 ## Evidencia del Paso 11
 
@@ -24,8 +25,17 @@
 - Correo repetido rechazado.
 - Integración Netlify, Render y Aiven validada.
 
+## Evidencia del Paso 12
+
+- Los requisitos R1–R13 fueron contrastados con la entrega.
+- La aplicación y ambos repositorios tienen acceso público.
+- La arquitectura, operación, pruebas y despliegue están documentados.
+- Los límites de los servicios gratuitos están identificados.
+- Las credenciales y certificados permanecen fuera de Git.
+- La auditoría final está registrada en `docs/final-audit.md`.
+
 ## Estado actual
 
 El backend está publicado y conectado de forma segura con MySQL remoto.
 
-Las credenciales y los certificados permanecen fuera del repositorio.
+El proyecto cumple el alcance del blueprint y está listo para su entrega final.
